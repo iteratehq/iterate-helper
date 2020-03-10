@@ -5,3 +5,5 @@ services:
     container_name: iterate-helper
     ports:
       - 8084:80
+    volumes:
+      - ./:/app
