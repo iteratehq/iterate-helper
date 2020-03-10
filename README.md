@@ -1,4 +1,7 @@
 # Iterate Helper
+
+<a href="https://codeclimate.com/repos/5e6793ca24fdbc2b54003225/maintainability"><img src="https://api.codeclimate.com/v1/badges/14c1e0c0c90ccf652912/maintainability" /></a>
+
 Helper script enabling iframe-based website surveys
 
 # Local Development
