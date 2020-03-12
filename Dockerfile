@@ -10,4 +10,6 @@ RUN apt update && apt install -y yarn
 
 COPY ./src /usr/share/nginx/html
 
+WORKDIR /app
+
 EXPOSE 80
