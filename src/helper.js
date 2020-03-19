@@ -7,7 +7,7 @@
     //   return;
     // }
 
-    if (typeof event.data !== 'object' || event.data === null) {
+    if (event === undefined || event === null || typeof event.data !== 'object' || event.data === null) {
       return;
     }
 
