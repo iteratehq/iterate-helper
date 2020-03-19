@@ -34,6 +34,7 @@
     window.addEventListener('message', receiveMessage, false);
   }
 
+  // Wait until the page has loaded before initializing, to ensure that the iframe is on the page
   if (window.document.readyState === 'complete') {
     init();
   } else if (window.attachEvent) {
