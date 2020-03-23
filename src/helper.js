@@ -26,9 +26,31 @@
       case 'RESIZE_IFRAME':
         console.log('Resize iframe');
         break;
+      case 'INIT_CONTAINER_LOADED':
+        onInitContainerLoaded();
+        break;
       default:
         return;
     }
+  }
+
+  function onInitContainerLoaded() {
+    // Forward any pending commands from the queue into the iframe and replace the queue
+    // with a function that forwards commands directly into the frame.
+    // We wait until the INIT_CONTAINER_LOADED event has fired so we know that the
+    // command center within embed is ready for commands.
+    window.Iterate.queue.forEach(function(command) {
+      sendCommand(command);
+    });
+    window.Iterate = function() {
+      sendCommand(arguments);
+    };
+
+    // Now that all commands have been processed, we can call 'install'
+    // which will request a survey (the initial requiest for a survey is delayed
+    // since we set installOnLoad to false within the iframe to give us time to
+    // execute any pending commands).
+    window.Iterate('install');
   }
 
   // Forward an Iterate(...) command into the iframe to be executed
@@ -56,15 +78,6 @@
     }
 
     window.addEventListener('message', receiveMessage, false);
-
-    // Forward any pending commands from the queue into the iframe and replace the queue
-    // with a function that forwards commands directly into the frame
-    window.Iterate.queue.forEach(function(command) {
-      sendCommand(command);
-    });
-    window.Iterate = function() {
-      sendCommand(arguments);
-    };
   }
 
   // Wait until the page has loaded before initializing, to ensure that the iframe is on the page
