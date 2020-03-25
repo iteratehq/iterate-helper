@@ -1,37 +1,27 @@
 (function() {
+  var iframe;
   var iframeWindow;
 
-  // Set the Iterate global object to a queue that collects commands until the
-  // iframe loads and the commands are forwarded into it.
-  var IterateCommandQueue = function() {
-    IterateCommandQueue.appendCommand(arguments);
-  };
-  IterateCommandQueue.queue = [];
-  IterateCommandQueue.appendCommand = function(args) {
-    IterateCommandQueue.queue.push(args);
-  };
-  window.Iterate = IterateCommandQueue;
+  // Show the iframe, and position it in one of the four corners of the screen
+  function show(data) {
+    iframe.style.display = 'block';
+    iframe.style.position = 'fixed';
+    iframe.style.top = data.top !== undefined ? data.top : 'auto';
+    iframe.style.bottom = data.bottom !== undefined ? data.bottom : 'auto';
+    iframe.style.left = data.left !== undefined ? data.left : 'auto';
+    iframe.style.right = data.right !== undefined ? data.right : 'auto';
+  }
 
-  function receiveMessage(event) {
-    // TODO: uncomment this when we deploy the script
-    // if (event.origin !== 'https://iteratehq.com') {
-    //   return;
-    // }
+  function hide() {
+    iframe.style.display = 'none';
+  }
 
-    if (event === undefined || event === null || typeof event.data !== 'object' || event.data === null) {
-      return;
-    }
-
-    switch (event.data.type) {
-      case 'RESIZE_IFRAME':
-        console.log('Resize iframe');
-        break;
-      case 'INIT_CONTAINER_LOADED':
-        onInitContainerLoaded();
-        break;
-      default:
-        return;
-    }
+  // Resize the iframe (after an optional delay to allow for transition animations to finish)
+  function resize(data) {
+    setTimeout(function() {
+      iframe.style.height = data.height !== undefined ? data.height : iframe.style.height;
+      iframe.style.width = data.width !== undefined ? data.width : iframe.style.width;
+    }, data.delay || 0);
   }
 
   function onInitContainerLoaded() {
@@ -66,8 +56,38 @@
     );
   }
 
+  function receiveMessage(event) {
+    // TODO: uncomment this when we deploy the script
+    // if (event.origin !== 'https://iteratehq.com') {
+    //   return;
+    // }
+
+    if (event === undefined || event === null || typeof event.data !== 'object' || event.data === null) {
+      return;
+    }
+
+    var data = event.data.data;
+
+    switch (event.data.type) {
+      case 'HIDE_IFRAME':
+        hide();
+        break;
+      case 'SHOW_IFRAME':
+        show(data);
+        break;
+      case 'RESIZE_IFRAME':
+        resize(data);
+        break;
+      case 'INIT_CONTAINER_LOADED':
+        onInitContainerLoaded();
+        break;
+      default:
+        return;
+    }
+  }
+
   function init() {
-    var iframe = window.document.getElementById('iterate-iframe');
+    iframe = window.document.getElementById('iterate-iframe');
     if (iframe == null) {
       return;
     }
@@ -79,6 +99,17 @@
 
     window.addEventListener('message', receiveMessage, false);
   }
+
+  // Set the Iterate global object to a queue that collects commands until the
+  // iframe loads and the commands are forwarded into it.
+  var IterateCommandQueue = function() {
+    IterateCommandQueue.appendCommand(arguments);
+  };
+  IterateCommandQueue.queue = [];
+  IterateCommandQueue.appendCommand = function(args) {
+    IterateCommandQueue.queue.push(args);
+  };
+  window.Iterate = IterateCommandQueue;
 
   // Wait until the page has loaded before initializing, to ensure that the iframe is on the page
   if (window.document.readyState === 'complete') {
