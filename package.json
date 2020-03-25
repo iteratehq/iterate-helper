@@ -2,6 +2,7 @@
   "name": "iterate-helper",
   "version": "0.0.1",
   "devDependencies": {
+    "google-closure-compiler": "20200325.0.0-nightly",
     "jest": "^25.1.0"
   },
   "scripts": {
