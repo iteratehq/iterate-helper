@@ -46,6 +46,9 @@
       sendCommand(arguments);
     };
 
+    // Set the current URL (used for URL based targeting)
+    Iterate('url', window.location.href);
+
     // Now that all commands have been processed, we can call 'install'
     // which will request a survey (the initial requiest for a survey is delayed
     // since we set installOnLoad to false within the iframe to give us time to
