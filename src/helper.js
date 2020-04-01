@@ -2,6 +2,8 @@
   var iframe;
   var iframeWindow;
 
+  const targetiFrameUrl = 'https://{{COMPANY}}.static-iteratehq.com';
+
   // Show the iframe, and position it in one of the four corners of the screen
   function show(data) {
     iframe.style.display = 'block';
@@ -48,22 +50,20 @@
 
   // Forward an Iterate(...) command into the iframe to be executed
   function sendCommand(args) {
-    // TODO: Set the targetOrigin from * to the URL of the iframe and determine how to make this work in dev
     var args = Array.prototype.slice.call(args);
     iframeWindow.postMessage(
       {
         type: 'COMMAND',
         arguments: args,
       },
-      '*'
+      targetiFrameUrl
     );
   }
 
   function receiveMessage(event) {
-    // TODO: uncomment this when we deploy the script
-    // if (event.origin !== 'https://iteratehq.com') {
-    //   return;
-    // }
+    if (event.origin !== targetiFrameUrl) {
+      return;
+    }
 
     if (event === undefined || event === null || typeof event.data !== 'object' || event.data === null) {
       return;
