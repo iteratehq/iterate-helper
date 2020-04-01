@@ -6,8 +6,8 @@ Helper script enabling iframe-based website surveys
 
 # Build
 
-Run the following command to compile src/helper.js into dist/helper-{hash}.js using google closure compiler
-`docker-compose run helper build/compile.sh`
+Run the following command to compile src/helper.js into dist/company-name-helper.js using google closure compiler
+`docker-compose run helper build/compile.sh company-name`
 
 # Local Development
 
