@@ -2,8 +2,8 @@
   "name": "iterate-helper",
   "version": "0.0.1",
   "devDependencies": {
-    "google-closure-compiler": "20200325.0.0-nightly",
-    "jest": "^25.1.0"
+    "google-closure-compiler": "20210202.0.0",
+    "jest": "^26.6.3"
   },
   "scripts": {
     "test": "jest"
